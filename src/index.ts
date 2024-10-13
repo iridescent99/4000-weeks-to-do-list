@@ -11,11 +11,13 @@ import { FourThousandWeeksSettingsTab } from './settings';
 export interface Settings {
 	openToDoListFolder: string;
     closedToDoListLocation: string;
+    archiveLocation: string;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
 	openToDoListFolder: "_open_todo_list",
-    closedToDoListLocation: "CLOSED/closed_list.md"
+    closedToDoListLocation: "CLOSED/closed_list.md",
+    archiveLocation: "archive.md"
 }
 
 export interface TaskItem {

@@ -29,7 +29,7 @@ export class Registry {
         this.vaultFiles = plugin.app.vault.getFiles();
         this.closedListPath = closedListPath;
         this.basePath = plugin.settings.openToDoListFolder;
-        this.closedListFile = plugin.dailyNotesManager.trackingFile;
+        this.closedListFile = plugin.settings.closedToDoListLocation;
         plugin.app.vault.read(this.closedListFile).then((content) => this.closedListContent = content.split("\n"));
     }
 

@@ -1,0 +1,59 @@
+/* Container for the toggle switch */
+.toggle-container {
+    display: inline-block;
+    position: relative;
+}
+
+/* Hide the checkbox visually, but keep it accessible */
+.toggle-checkbox {
+    display: none;
+}
+
+/* Label is the visible part of the toggle switch */
+.toggle-label {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+    background-color: #ccc;
+    border-radius: 34px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+/* Inner circle of the switch */
+.toggle-inner {
+    position: absolute;
+    top: 50%;
+    left: 4px;
+    transform: translateY(-50%);
+    width: 26px;
+    height: 26px;
+    background: linear-gradient(45deg, black, rgb(23, 23, 23));
+    border-radius: 50%;
+    transition: left 0.2s;
+    display:none;
+}
+
+/* Switch circle itself */
+.toggle-switch {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 4px;
+    width: 26px;
+    height: 26px;
+    background:linear-gradient(45deg, black, rgb(23, 23, 23));
+    border-radius: 50%;
+    transform: translateY(-50%);
+    transition: left 0.2s ease-in-out;
+}
+
+/* Toggle on state */
+.toggle-checkbox:checked + .toggle-label {
+    /* background: linear-gradient(45deg, rgb(33, 33, 33), rgb(104, 104, 104)); */
+}
+
+.toggle-checkbox:checked + .toggle-label .toggle-switch {
+    left: 30px; /* Move the switch circle to the right */
+}

@@ -1,52 +1,17 @@
 import {StrictMode, useEffect, useMemo, useRef, useState} from "react";
 import "./open_task_list.css";
-import {TaskListCategory} from "./taskListCategory";
-import {Registry} from "./registry";
-import {Category, Heading} from "./category";
-import {Task} from "./Task";
-import {AddUnitWindow} from "./addUnitWindow";
+import {TaskListCategory} from "../taskListCategory";
+import {Registry} from "../registry";
+import {Category, Heading} from "../category";
+import {Task} from "../Task";
+import {AddUnitWindow} from "../addUnitWindow";
 import {Notice} from "obsidian";
 import {Simulate} from "react-dom/test-utils";
 import select = Simulate.select;
 
 
-function transparentModal(modal: Element) {
-    // @ts-ignore
-    modal.style.background = "rgba(0,0,0,0.65)";
-    // @ts-ignore
-    modal.style.border = "none";
-    // @ts-ignore
-    modal.style.height = "80%";
-    // @ts-ignore
-    modal.style.width = "100%";
-    // @ts-ignore
-    modal.style.backdropFilter = "blur(20px)";
-    // @ts-ignore
-    modal.style.padding = "2em";
-}
 
-function setMobileLayout(modal: Element) {
-    // @ts-ignore
-    modal.style.top = "0";
-    // @ts-ignore
-    modal.style.padding = "0";
-    // @ts-ignore
-    modal.style.height = "90%";
-    // @ts-ignore
-    modal.style.overflow = "hidden";
-}
-
-function alterContainer(container: Element) {
-
-    // @ts-ignore
-    modal.style.width = "90%";
-    // @ts-ignore
-    modal.style.padding = "0";
-}
-
-
-export function OpenTaskListManager({ plugin, closedListPath, open, close }: any) {
-    const [registry, setRegistry] = useState(new Registry(plugin, closedListPath));
+export function OpenTaskListManager({ plugin, registry, closedListPath }: any) {
     const [categories, setCategories] = useState<string[]>([]);
     const [selectedCategory, setSelectedCategory] = useState<Category>();
     const [addHeadingWindow, toggleAddHeadingWindow] = useState(false);
@@ -61,7 +26,7 @@ export function OpenTaskListManager({ plugin, closedListPath, open, close }: any
     const [newCategory, setNewCategory] = useState("");
 
     useEffect(() => {
-        alterModalLayout();
+    
         const categories = registry.getCategories();
         if (categories.length > 0) {
             setCategories(categories);
@@ -76,7 +41,7 @@ export function OpenTaskListManager({ plugin, closedListPath, open, close }: any
         const initializeTasks = async () => {
             if (selectedCategory) {
                 await selectedCategory.retrieveTasks().then(() => {
-                    const grdnt = `linear-gradient(45deg, ${selectedCategory.gradient.join(", ")})`;
+                    const grdnt = `linear-gradient(45deg, ${selectedCategory.gradient.length > 0 ? selectedCategory.gradient.join(", ") : "deeppink, cadetblue"})`;
                     setGradient(grdnt);
                     return grdnt
                 }).then((grdnt: string) => {
@@ -95,17 +60,7 @@ export function OpenTaskListManager({ plugin, closedListPath, open, close }: any
         setSelectedCategory(registry.createCategory(name));
     }
 
-    const alterModalLayout = () => {
-        const openTaskListModal = Array.from(document.getElementsByClassName("modal")).filter((modal) => modal.firstElementChild?.hasClass('open-task-list-view'));
-        if (openTaskListModal.length === 1) {
-            transparentModal(openTaskListModal[0]);
-            if (plugin.app.isMobile) setMobileLayout(openTaskListModal[0]);
-        }
-
-
-        const modalContainer = Array.from(document.getElementsByClassName("modal-container")).filter((modal) => modal.firstElementChild?.hasClass('modal'));
-        if (modalContainer.length === 1) alterContainer(modalContainer[0]);
-    }
+   
 
     const addTask = (task: string) => {
         if (!activeHeading) new Notice("No active heading, cannot create task!");
@@ -154,7 +109,7 @@ export function OpenTaskListManager({ plugin, closedListPath, open, close }: any
         }
     }
 
-    const processCategoryCreation = (e) => {
+    const processCategoryCreation = (e: any) => {
         if (e.key === "Enter" && newCategory.length > 0) {
     
             if (registry) {
@@ -168,7 +123,7 @@ export function OpenTaskListManager({ plugin, closedListPath, open, close }: any
     }
 
     return (
-        <div className="open-task-list-view">
+        <>
             {!noDataToggle && <div className="open-task-list-select">
                 <select onChange={(e) => loadCategory(e.target.value)}>
                     {categories.map((cat: string) => <option>{cat}</option>)}
@@ -194,7 +149,7 @@ export function OpenTaskListManager({ plugin, closedListPath, open, close }: any
             {selectedCategory && <TaskListCategory category={selectedCategory} gradient={gradient} addTask={activateTaskWindow} reload={reload} removeHeading={removeHeading} removeTask={removeTask} moveTask={moveTask} setStyle={setStyle} />}
             {addHeadingWindow && selectedCategory && <AddUnitWindow addUnit={addHeading} placeholder={"### Heading.."} closeWindow={closeHeadingWindow} gradient={gradient}/>}
             {addTaskWindow && selectedCategory && <AddUnitWindow addUnit={addTask} placeholder={"Sample task.."} closeWindow={closeTaskWindow} gradient={gradient} />}
-        </div>
+        </>
     )
 }
 

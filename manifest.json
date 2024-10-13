@@ -1,6 +1,6 @@
 {
-    "id": "4000-weeks-to-do-list",
-    "name": "4000 Weeks to do list",
+    "id": "4000-task-management",
+    "name": "4000 Weeks task management system",
     "version": "1.0.0",
     "minAppVersion": "0.9.12",
     "description": "A task management system based on Oliver Burkeman's 4000 Weeks",
