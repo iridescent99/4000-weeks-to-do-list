@@ -3,13 +3,14 @@ import {TFile} from "obsidian";
 import {Category, Heading} from "./category";
 import {Task} from "./Task";
 import {InteractiveViewMode} from "./interactiveViewMode";
+import FourThousandWeeks from "src";
 
 interface Register {
     [key: string]: Category;
 }
 
 export class Registry {
-    plugin: WorkflowAssistant;
+    plugin: FourThousandWeeks;
     registry: Register;
     basePath: string;
     closedListPath: string;
@@ -23,14 +24,13 @@ export class Registry {
     headings: Heading[] =[];
     labels: string[] = [];
 
-    constructor(plugin: WorkflowAssistant, closedListPath: string) {
+    constructor(plugin: FourThousandWeeks, closedListPath: string) {
         this.registry = {};
         this.plugin = plugin;
         this.vaultFiles = plugin.app.vault.getFiles();
-        this.closedListPath = closedListPath;
         this.basePath = plugin.settings.openToDoListFolder;
-        this.closedListFile = plugin.settings.closedToDoListLocation;
-        plugin.app.vault.read(this.closedListFile).then((content) => this.closedListContent = content.split("\n"));
+        this.closedListFile = plugin.app.vault.getAbstractFileByPath(plugin.settings.closedToDoListLocation) as TFile;
+        plugin.app.vault.read(this.closedListFile).then((content) => this.closedListContent = content ? content.split("\n") : []);
     }
 
     async loadAllTasks() {
@@ -65,6 +65,7 @@ export class Registry {
 
     moveTask(registry: Registry, category: Category, task: Task, check=false) {
         registry._insertIntoClosedList(registry, category, task);
+        console.log(registry.closedListContent)
         if (check) category.tasks = category.tasks.filter((tsk: Task) => tsk !== task);
         task.inClosedList = true;
         registry.plugin.app.vault.modify(registry.closedListFile, registry.closedListContent.join("\n"));
@@ -73,6 +74,7 @@ export class Registry {
     _insertIntoClosedList(registry: Registry, category: Category, task: Task): void {
         // Formats labels as headings and checks if they're present in CL. Otherwise, insert.
         let formattedLabels: string[] = [...category.labels, task.anchorHeading].map((text, i:number) => `${"#".repeat(1 + i)} ${text}`);
+        console.log(registry.closedListContent)
         let lastLabelIndex = registry.closedListContent.length;
         for (let label of formattedLabels) {
             const loc = registry.closedListContent.indexOf(label);
