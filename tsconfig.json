@@ -1,0 +1,40 @@
+{
+    "compilerOptions": {
+      "baseUrl": ".",
+      "inlineSourceMap": true,
+      "types": ["node"],
+      "inlineSources": true,
+      "target": "ES6",
+      "allowJs": true,
+      "jsx": "react-jsx",
+      "noImplicitAny": true,
+      "moduleResolution": "node",
+      "skipLibCheck": true,
+      "importHelpers": true,
+      "strictNullChecks": true,
+      "outDir": "dist",
+      "module": "ESNext",
+      "esModuleInterop": true,
+      "strict": false,
+      "strictPropertyInitialization": false,
+      "resolveJsonModule": true,
+      "forceConsistentCasingInFileNames": true,
+      "lib": [
+        "dom",
+        "es6",
+        "scripthost",
+        "es2015",
+        "es2019",
+        "es2020"
+      ]
+    },
+    "types": [
+      "node",
+    ],
+    "include": [
+      "./src/**/*.ts",
+      "./src/**/*.tsx"
+    ]
+  
+  }
+  

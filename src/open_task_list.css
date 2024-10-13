@@ -1,0 +1,236 @@
+/* --- OPEN TASK LIST MODAL --- */
+.open-task-list-view {
+  display: flex;
+  grid-gap:1em;
+  flex-wrap: wrap;
+  padding: 1em;
+  width:100%;
+  height:94%;
+}
+
+.task-list-category {
+  height:100%;
+  width:100%;
+  display:inline-block;
+  background: rgba(21, 21, 21, 0.7);
+  flex-shrink: 0;
+  flex-grow: 0;
+  border-radius: 15px;
+  position:relative;
+  padding:1em;
+  margin-top:3em;
+  font-size: small;
+  border: 1px solid #131313;
+}
+
+.task-list-page {
+  height:100%;
+  padding:1em;
+  width:3%;
+  border-bottom-right-radius: 15px;
+  border-top-right-radius: 15px;
+  background: linear-gradient(45deg, deeppink, cadetblue);
+  position: absolute;
+  right:0;
+  top:0;
+  bottom:0;
+  z-index:1;
+}
+
+.category-title {
+  /*color:white;*/
+  text-align: left;
+  padding:0 1em;
+  color: #e7e7e7;
+
+  z-index:4;
+  position:relative;
+}
+
+.task-list-labels {
+  width:100%;
+  text-align: left;
+  z-index:4;
+  position: relative;
+  padding:1em;
+  padding-left:0;
+}
+
+.task-list-label {
+  display: inline-block;
+  margin: .5em 1em;
+  color: gray;
+}
+
+.task-list {
+  position:relative;
+  width:100%;
+  height:90%;
+  z-index:4;
+  padding:1em 3em 1em 1em;
+  overflow-y: scroll;
+}
+
+
+.task {
+  display:flex;
+  align-items:flex-start;
+  margin: 1em 0;
+  color: #b4b4b4;
+
+  code {
+    font-family: "JetBrains Mono", monospace;
+    color:greenyellow;
+    background: #1f1f1f;
+  }
+
+  &.in-closed{
+    font-style: italic;
+    color: #575656;
+  }
+
+  &:hover {
+    color: #ffffff;
+    cursor: pointer;
+  }
+
+  &.complete {
+    text-decoration: line-through;
+    color: #4d4d4d;
+  }
+
+}
+
+.task-list-category .task {
+  display: block;
+  align-items: unset;
+  margin: .5em 0;
+  color: #b4b4b4;
+}
+
+.checkbox {
+  border-color: #1e1e1e;
+  outline: none;
+
+  &:hover {
+    border-color: #1e1e1e;
+    outline:none;
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+}
+
+.task input[type=checkbox],
+.task input[type=checkbox]:focus,
+.task input[type=checkbox]:hover {
+  outline: none; /* Removes the white outline */
+  border:none;
+}
+
+/* Optional: Add a custom focus style (if needed) */
+input[type=checkbox]:focus-visible {
+  border: 1px solid #000; /* Example of adding a custom border instead */
+}
+
+.arrow {
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  font-weight: bold;
+}
+
+h1,h2,h3,h4,h6,h5 {
+  color: #d3d2d2;
+}
+
+.open-task-list-select {
+  width:100%;
+  display: flex;
+  justify-items: center;
+  justify-content: space-evenly;
+
+  select {
+    background: #101010;
+    width: 40%;
+
+
+
+  }
+}
+
+.task-content, .subtask-content {
+  display:inline-block;
+}
+
+.task-container {
+  display:flex;
+  margin: 1em 0 1em 0;
+
+  &:hover {
+    color:white;
+  }
+}
+
+.open-list-add-task-button {
+  background: #101010;
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.no-data-div {
+  text-align:center;
+  width:100%;
+  display:flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.no-data-div button {
+  cursor:pointer;
+
+}
+
+.no-data-div button, .no-data-div input {
+  margin: 2em;
+}
+
+
+@media (max-width: 400px) {
+  .task-list-category {
+    margin-top:0;
+    grid-row:2;
+    grid-column:1;
+    background: rgba(21, 21, 21, 0.85);
+  }
+
+  .task-list {
+    height:80%;
+  }
+
+  .open-task-list-view {
+    display:grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 15% 85%;
+    margin-top:2em;
+  }
+
+  .open-task-list-select {
+    grid-row:1;
+    grid-column:1;
+    align-items: center;
+
+    select {
+      width:70%;
+    }
+
+    button {
+      padding: 1em 2em;
+    }
+  }
+
+
+}

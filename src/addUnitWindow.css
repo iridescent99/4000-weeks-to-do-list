@@ -1,0 +1,50 @@
+.add-unit-container {
+  display: flex;
+  position: absolute;
+  width:40%;
+  height:fit-content;
+  background: #1f1f1f;
+  margin: 40% 30%;
+  border-radius: 15px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  z-index:10;
+  background-clip: border-box;
+  border: 1em solid transparent;
+
+  .unit-description {
+    border:none;
+    border-radius: 15px;
+    background: #b4b4b4;
+    color:black;
+    width:30vw;
+    height:2em;
+    padding-left:2em;
+    margin-bottom: 1em;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+
+}
+
+
+@media (max-width: 400px) {
+  .add-unit-container {
+    width: 90%;
+    margin: 40% 1%;
+
+
+    .unit-description {
+      width:80vw;
+    }
+
+    button {
+      border-radius: 10px;
+    }
+  }
+
+}
