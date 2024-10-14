@@ -40,11 +40,8 @@ export default class FourThousandWeeks extends Plugin {
     async onload() {
 
         try {
-            console.log('Loading workflow..');
 
             await this.loadSettings();
-
-            console.log(`Welcome.. Today's date is ${new Date().toISOString().split("T")[0]}`);
 
             this.addSettingTab(new FourThousandWeeksSettingsTab(this.app, this));
 

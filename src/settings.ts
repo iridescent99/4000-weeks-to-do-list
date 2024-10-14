@@ -36,7 +36,7 @@ export class FourThousandWeeksSettingsTab extends PluginSettingTab {
 		})
         if (settingReference.includes("Folder")) {
             input.addEventListener('focus', () => {
-                // show all possible folders 
+                // TODO: show all possible folders
                 this.plugin.app.vault.getAllFolders()
             })
         }
@@ -48,34 +48,6 @@ export class FourThousandWeeksSettingsTab extends PluginSettingTab {
 		this.plugin.settings[reference] = value;
 		this.plugin.saveSettings()
 ;	}
-
-
-	addTextField(containerEl: HTMLElement, reference: string, value='') {
-        // Verify input
-
-
-		// const wrapper = containerEl.createDiv()
-		// containerEl.insertBefore(wrapper, containerEl.children[containerEl.children.length-1])
-		// const textInput = wrapper.createEl('input');
-		// textInput.type = 'text';
-		// textInput.value = value;
-		// textInput.className = reference;
-
-		// const removeButton = wrapper.createEl('button', {
-		// 	text: 'Remove'
-		// })
-		// removeButton.addEventListener('click', () => {
-		// 	wrapper.remove();
-		// 	const textValues = Array.from(containerEl.querySelectorAll(`.${reference}`)).map((el: HTMLInputElement) => el.value);
-		// 	// @ts-ignore
-		// 	this.plugin.settings[reference] = textValues;
-		// 	this.plugin.saveSettings()
-		// });
-
-		// textInput.addEventListener('input', () => {
-		// 	this.saveMultipleTextValues(containerEl, reference)
-		// })
-	}
 
 	saveMultipleTextValues(containerEl: HTMLElement, reference: string) {
 		// @ts-ignore

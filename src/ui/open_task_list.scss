@@ -8,11 +8,12 @@
   height:94%;
   overflow:hidden;
 }
-
+.category-container {
+  height:100%;
+}
 .task-list-category {
   height:95%;
   width:100%;
-  display:inline-block;
   background: rgba(21, 21, 21, 0.7);
   flex-shrink: 0;
   flex-grow: 0;

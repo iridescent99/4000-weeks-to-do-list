@@ -1,7 +1,6 @@
 import {TFile} from "obsidian";
 import {Category, Heading} from "./category";
 import {Task} from "./Task";
-import {InteractiveViewMode} from "./interactiveViewMode";
 import FourThousandWeeks from "src/index";
 
 interface Register {
@@ -17,7 +16,6 @@ export class Registry {
     reload: Function|null|undefined;
     nameToPathMap: any = {};
     closedListFile: TFile;
-    closedListViewMode: InteractiveViewMode;
     tasks: Task[] = [];
     headings: Heading[] =[];
     labels: string[] = [];
@@ -59,48 +57,35 @@ export class Registry {
         return Object.keys(this.nameToPathMap).sort();
     }
 
-    createGraphData(plugin: FourThousandWeeks) {
-        const filePaths = plugin.tools.getFiles(this.plugin.settings.openToDoListFolder).map((file) => file.path.replace(this.plugin.settings.openToDoListFolder, ''));
-
-        const root: any = [];
-
-        // Helper function to find or create a node in the tree
-        const findOrCreateNode = (name: string, children: any[]) => {
-            let node = children.find((child) => child.name === name);
-            if (!node) {
-                node = { name, children: [] };
-                children.push(node);
-            }
-            return node;
-        };
-
-        filePaths.forEach((path) => {
-            const parts = path.split('/'); // Split path into directory components
-            let currentLevel = root;
-
-            parts.forEach((part, index) => {
-                const isFile = part.includes('.md')
-                if (isFile) {
-                    // Add the file node
-                    currentLevel.push({ name: part.replace('.md', '') });
-                } else {
-                    // Add the directory node
-                    const node = findOrCreateNode(part, currentLevel);
-                    currentLevel = node.children;
-                }
-            });
-        });
-
-        const data = [
-            {
-                name: 'Open List',
-                children: root
-            },
-        ];
-        return data;
+    getOpenListFolders() {
+        return this.plugin.app.vault.getAllFolders().filter((folder) => folder.path.startsWith(this.basePath));
     }
 
+    async loadClosedTasks() {
+        // TODO: Instead of recreate tasks, load existing from open todo list
+        if (this.closedListFile) {
+            const content = await this.plugin.app.vault.read(this.closedListFile).then((data) => data.split("\n"));
 
+            let previousTask: Task|null = null;
+
+            content.forEach((line, i) => {
+
+                if (/^\t-\s\[/g.test(line) && previousTask)  {
+
+                    previousTask.addSubtask(line)
+
+                } else if (line.includes('- [ ]') || line.includes('- [x]')) { // @ts-ignore
+
+                    previousTask = new Task(line, [], this.registry, this, i);
+                    this.tasks.push(previousTask);
+
+                }
+
+            });
+
+        }
+        return this.tasks;
+    }
 
     //
     // moveTask(registry: Registry, category: Category, task: Task, check=false) {

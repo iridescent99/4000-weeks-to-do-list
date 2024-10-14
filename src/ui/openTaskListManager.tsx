@@ -8,7 +8,6 @@ import {AddUnitWindow} from "../addUnitWindow";
 import {Notice} from "obsidian";
 import {Simulate} from "react-dom/test-utils";
 import select = Simulate.select;
-import UpsideDownTree from "../taskTree";
 
 
 
@@ -64,9 +63,6 @@ export function OpenTaskListManager({ plugin, registry, navBar, toggleAddHeading
         initializeTasks();
     },[selectedCategory])
 
-    const loadCategory = async (name: string) => {
-        setSelectedCategory(registry.createCategory(name));
-    }
 
     const addTask = (task: string) => {
         if (!activeHeading) new Notice("No active heading, cannot create task!");
@@ -134,17 +130,7 @@ export function OpenTaskListManager({ plugin, registry, navBar, toggleAddHeading
 
     return (
         <>
-            {!noDataToggle && <div className="open-task-list-select">
-                <select className="open-task-list-cat-select" onChange={(e) => loadCategory(e.target.value)}>
-                    {categories.map((cat: string) => <option>{cat}</option>)}
-                </select>
-                <div
-                    className="collapsible-header"
-                    onClick={() => toggleTree(!showTree)}
-                >
-                    <button>{showTree ? 'Collapse tree' : 'Expand tree'}</button>
-                </div>
-            </div>}
+
 
             {noDataToggle && 
             <div className="no-data-div">
@@ -158,23 +144,8 @@ export function OpenTaskListManager({ plugin, registry, navBar, toggleAddHeading
 
 
             <div className="vis-container">
-            <div
-                className="task-tree-container"
-                style={{
-                    height: showTree ? 'auto' : '0px',
-                    overflow: 'hidden',
-                    transition: 'height 0s ease',
-                }}
-            >
-                {registry && plugin && selectedCategory && nodeColor && <UpsideDownTree registry={registry} plugin={plugin} nodeColor={nodeColor} selectedCategory={selectedCategory} />}
-            </div>
 
-            <div className="category-container"
-                 style={{
-                     height: showTree ? '58%' : '100%',
-                     overflow: 'hidden',
-                     transition: 'height 0s ease',
-                 }}>
+            <div className="category-container">
                 {selectedCategory && <TaskListCategory category={selectedCategory} gradient={gradient} addTask={activateTaskWindow} reload={reload} removeHeading={removeHeading} removeTask={removeTask} moveTask={moveTask} setStyle={setStyle} />}
             </div>
             </div>

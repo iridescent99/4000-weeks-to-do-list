@@ -5,11 +5,13 @@ import { PiHash, PiNote } from "react-icons/pi";
 import { Registry } from "src/registry";
 import "./toggle.css";
 import "./taskListManager.css";
+import {Category} from "../category";
+import {TFolder} from "obsidian";
 
 
 function transparentModal(modal: Element) {
     // @ts-ignore
-    modal.style.background = "rgba(0,0,0,0.45)";
+    modal.style.background = "rgba(0,0,0,0.15)";
     // @ts-ignore
     modal.style.border = "none";
     // @ts-ignore
@@ -49,8 +51,18 @@ export function TaskListManager({ plugin, closedListPath, open, close }: any) {
     const [addHeadingWindow, toggleAddHeadingWindow] = useState(false);
     const [addCategoryWindow, toggleCategoryWindow] = useState(false);
     const navBar = useRef(null);
+    const [categories, setCategories] = useState<string[]>([]);
+    const [activeCategory, setActiveCategory] = useState<Category>();
+    const [folders, setFolders] = useState<TFolder[]>([]);
 
     useEffect(() => {
+        const categories = registry.getCategories();
+        if (categories.length > 0) {
+            setCategories(categories);
+            setActiveCategory(registry.createCategory(categories[0]));
+            setFolders(registry.getOpenListFolders())
+        } else {
+        }
         alterModalLayout();
     },[])
 
@@ -68,6 +80,10 @@ export function TaskListManager({ plugin, closedListPath, open, close }: any) {
     const toggleOpenClosed = () => {
         if (openClosedToggle === "open") setOpenClosedToggle("closed");
         else setOpenClosedToggle("open");
+    }
+
+    const loadCategory = async (name: string) => {
+        setActiveCategory(registry.createCategory(name));
     }
 
     return (
@@ -91,9 +107,20 @@ export function TaskListManager({ plugin, closedListPath, open, close }: any) {
                         <PiHash size={"1.8em"} />
                     </button>
                 </div>}
+
+                {openClosedToggle === "open" && <div className="open-task-list-select">
+                    <select className="open-task-list-cat-select" onChange={(e) => loadCategory(e.target.value)}>
+                        {categories.map((cat: string) => <option>{cat}</option>)}
+                    </select>
+                </div>}
             </div>
 
-
+            {openClosedToggle === "open" && <div className="folder-slide">
+                {folders && folders.map((folder) => <div
+                    onClick={() => toggleCategoryWindow(!addCategoryWindow)}
+                    className="folder"
+                >{folder.name}</div>)}
+            </div>}
 
             {openClosedToggle === "open" &&
             <OpenTaskListManager 
@@ -109,8 +136,7 @@ export function TaskListManager({ plugin, closedListPath, open, close }: any) {
             <ClosedTaskListManager 
                 plugin={plugin} 
                 registry={registry}
-                closedListPath={closedListPath} 
-                />}
+            />}
         </div>
     )
 }
