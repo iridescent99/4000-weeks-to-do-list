@@ -1,5 +1,5 @@
 import {StrictMode, useEffect, useMemo, useRef, useState} from "react";
-import "./open_task_list.css";
+import "./open_task_list.scss";
 import {TaskListCategory} from "../taskListCategory";
 import {Registry} from "../registry";
 import {Category, Heading} from "../category";
@@ -8,13 +8,13 @@ import {AddUnitWindow} from "../addUnitWindow";
 import {Notice} from "obsidian";
 import {Simulate} from "react-dom/test-utils";
 import select = Simulate.select;
+import UpsideDownTree from "../taskTree";
 
 
 
-export function OpenTaskListManager({ plugin, registry, closedListPath }: any) {
+export function OpenTaskListManager({ plugin, registry, navBar, toggleAddHeadingWindow, addHeadingWindow, addCategoryWindow, toggleCategoryWindow }: any) {
     const [categories, setCategories] = useState<string[]>([]);
     const [selectedCategory, setSelectedCategory] = useState<Category>();
-    const [addHeadingWindow, toggleAddHeadingWindow] = useState(false);
     const [addTaskWindow, toggleAddTaskWindow] = useState(false);
     const [activeHeading, setActiveHeading] = useState<Heading>();
     const [reload, forceReload] = useState(0);
@@ -24,6 +24,8 @@ export function OpenTaskListManager({ plugin, registry, closedListPath }: any) {
     const [noDataToggle, setNoDataToggle] = useState(false);
     const [creatingCategory, setCreatingCategory] = useState(false);
     const [newCategory, setNewCategory] = useState("");
+    const [showTree, toggleTree] = useState(true);
+    const [nodeColor, setNodeColor] = useState<string>();
 
     useEffect(() => {
     
@@ -42,6 +44,12 @@ export function OpenTaskListManager({ plugin, registry, closedListPath }: any) {
             if (selectedCategory) {
                 await selectedCategory.retrieveTasks().then(() => {
                     const grdnt = `linear-gradient(45deg, ${selectedCategory.gradient.length > 0 ? selectedCategory.gradient.join(", ") : "deeppink, cadetblue"})`;
+                    setNodeColor(selectedCategory.gradient.length > 0 ? selectedCategory.gradient[0] : "deeppink");
+                    if (navBar && navBar.current) {
+                        for (let child of navBar.current.children) {
+                            child.style.background = grdnt;
+                        }
+                    }
                     setGradient(grdnt);
                     return grdnt
                 }).then((grdnt: string) => {
@@ -59,8 +67,6 @@ export function OpenTaskListManager({ plugin, registry, closedListPath }: any) {
     const loadCategory = async (name: string) => {
         setSelectedCategory(registry.createCategory(name));
     }
-
-   
 
     const addTask = (task: string) => {
         if (!activeHeading) new Notice("No active heading, cannot create task!");
@@ -122,32 +128,59 @@ export function OpenTaskListManager({ plugin, registry, closedListPath }: any) {
         }
     }
 
+    const addCategory = () => {
+
+    }
+
     return (
         <>
             {!noDataToggle && <div className="open-task-list-select">
-                <select onChange={(e) => loadCategory(e.target.value)}>
+                <select className="open-task-list-cat-select" onChange={(e) => loadCategory(e.target.value)}>
                     {categories.map((cat: string) => <option>{cat}</option>)}
                 </select>
-                {style && <button
-                    ref={btn}
-                    style={style}
-                    className={"open-list-add-heading-button"}
-                    onClick={() => toggleAddHeadingWindow(!addHeadingWindow)}
-                >+</button>}
+                <div
+                    className="collapsible-header"
+                    onClick={() => toggleTree(!showTree)}
+                >
+                    <button>{showTree ? 'Collapse tree' : 'Expand tree'}</button>
+                </div>
             </div>}
 
             {noDataToggle && 
             <div className="no-data-div">
-                {!creatingCategory && <>Can't find any categories..</>}
-                {creatingCategory && <>Press enter to add category..</>}
+                <>{!creatingCategory ? "Can't find any categories.." : "Press enter to add category.."}</>
                 <div>
                     {!creatingCategory && <button onClick={() => setCreatingCategory(true)}>create category</button>}
                     {creatingCategory && <input onKeyDown={(e) => processCategoryCreation(e)} onChange={(e) => setNewCategory(e.target.value)}/>}
                 </div>
             </div>}
 
-            {selectedCategory && <TaskListCategory category={selectedCategory} gradient={gradient} addTask={activateTaskWindow} reload={reload} removeHeading={removeHeading} removeTask={removeTask} moveTask={moveTask} setStyle={setStyle} />}
+
+
+            <div className="vis-container">
+            <div
+                className="task-tree-container"
+                style={{
+                    height: showTree ? 'auto' : '0px',
+                    overflow: 'hidden',
+                    transition: 'height 0s ease',
+                }}
+            >
+                {registry && plugin && selectedCategory && nodeColor && <UpsideDownTree registry={registry} plugin={plugin} nodeColor={nodeColor} selectedCategory={selectedCategory} />}
+            </div>
+
+            <div className="category-container"
+                 style={{
+                     height: showTree ? '58%' : '100%',
+                     overflow: 'hidden',
+                     transition: 'height 0s ease',
+                 }}>
+                {selectedCategory && <TaskListCategory category={selectedCategory} gradient={gradient} addTask={activateTaskWindow} reload={reload} removeHeading={removeHeading} removeTask={removeTask} moveTask={moveTask} setStyle={setStyle} />}
+            </div>
+            </div>
+
             {addHeadingWindow && selectedCategory && <AddUnitWindow addUnit={addHeading} placeholder={"### Heading.."} closeWindow={closeHeadingWindow} gradient={gradient}/>}
+            {addCategoryWindow && <AddUnitWindow addUnit={addCategory} placeholder={"New category..."} closeWindow={closeHeadingWindow} gradient={gradient}/>}
             {addTaskWindow && selectedCategory && <AddUnitWindow addUnit={addTask} placeholder={"Sample task.."} closeWindow={closeTaskWindow} gradient={gradient} />}
         </>
     )

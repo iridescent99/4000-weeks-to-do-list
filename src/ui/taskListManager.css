@@ -1,0 +1,65 @@
+.task-view {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 4% 10% 86%;
+  height: 100%;
+}
+.task-view .task-view-header {
+  width: 100%;
+  grid-row: 1;
+  grid-column: 1;
+}
+.task-view .task-view-header .task-view-title, .task-view .task-view-header .toggle-container {
+  display: inline-block;
+}
+.task-view .task-view-header .task-view-title {
+  width: 100%;
+  text-align: center;
+}
+.task-view .task-view-header .task-view-title h1 {
+  margin: 0;
+}
+.task-view .task-view-header .toggle-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 3em;
+}
+.task-view .open-task-list-select {
+  grid-row: 2;
+  grid-column: 1;
+}
+.task-view .open-task-list-select .collapsible-header {
+  text-align: left;
+  margin: 1em;
+}
+.task-view .open-task-list-select .collapsible-header button {
+  background: none;
+  border: none;
+}
+.task-view .open-task-list-select .collapsible-header button:hover {
+  font-style: italic;
+}
+.task-view .vis-container {
+  grid-row: 3;
+  grid-column: 1;
+}
+
+.task-view-navigation {
+  display: flex;
+  justify-content: right;
+  position: absolute;
+  margin: 3em;
+  top: 0;
+  right: 0;
+}
+.task-view-navigation button {
+  margin: 0 1em;
+  padding: 0.6em;
+  cursor: pointer;
+}
+.task-view-navigation button:hover svg {
+  fill: #000;
+}
+
+/*# sourceMappingURL=taskListManager.css.map */

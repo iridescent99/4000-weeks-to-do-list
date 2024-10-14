@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react"
+import {useEffect, useRef, useState} from "react"
 import { OpenTaskListManager } from "./openTaskListManager";
 import { ClosedTaskListManager } from "./closedTaskListManager";
+import { PiHash, PiNote } from "react-icons/pi";
 import { Registry } from "src/registry";
 import "./toggle.css";
+import "./taskListManager.css";
 
 
 function transparentModal(modal: Element) {
@@ -43,7 +45,10 @@ function alterContainer(container: Element) {
 
 export function TaskListManager({ plugin, closedListPath, open, close }: any) {
     const [openClosedToggle, setOpenClosedToggle] = useState("open");
-    const [registry, setRegistry] = useState(new Registry(plugin, closedListPath));
+    const [registry, setRegistry] = useState(new Registry(plugin));
+    const [addHeadingWindow, toggleAddHeadingWindow] = useState(false);
+    const [addCategoryWindow, toggleCategoryWindow] = useState(false);
+    const navBar = useRef(null);
 
     useEffect(() => {
         alterModalLayout();
@@ -67,18 +72,38 @@ export function TaskListManager({ plugin, closedListPath, open, close }: any) {
 
     return (
         <div className="task-view">
-            <div className="toggle-container">
-                <input id="toggle-switch" onChange={() => toggleOpenClosed()} type="checkbox" className="toggle-checkbox"/>
-                <label htmlFor="toggle-switch" className="toggle-label">
-                <span className="toggle-inner">{openClosedToggle === "open" ? "O" : "C"}</span>
-                <span className="toggle-switch"></span>
-                </label>
+            <div className="task-view-header">
+                <div className="toggle-container">
+                    <input id="toggle-switch" onChange={() => toggleOpenClosed()} type="checkbox" className="toggle-checkbox"/>
+                    <label htmlFor="toggle-switch" className="toggle-label">
+                    <span className="toggle-inner"></span>
+                    <span className="toggle-switch"></span>
+                    </label>
+                </div>
+                <div className="task-view-title">
+                    <h1>{openClosedToggle} task list</h1>
+                </div>
+                {openClosedToggle === "open" && <div ref={navBar} className="task-view-navigation">
+                    <button onClick={() => toggleCategoryWindow(!addCategoryWindow)}>
+                        <PiNote size={"1.8em"} />
+                    </button>
+                    <button onClick={() => toggleAddHeadingWindow(!addHeadingWindow)}>
+                        <PiHash size={"1.8em"} />
+                    </button>
+                </div>}
             </div>
-            {openClosedToggle === "open" && 
+
+
+
+            {openClosedToggle === "open" &&
             <OpenTaskListManager 
                 plugin={plugin} 
                 registry={registry}
-                closedListPath={closedListPath} 
+                navBar={navBar}
+                toggleAddHeadingWindow={toggleAddHeadingWindow}
+                addHeadingWindow={addHeadingWindow}
+                addCategoryWindow={addCategoryWindow}
+                toggleCategoryWindow={toggleCategoryWindow}
             />}
             {openClosedToggle === "closed" && 
             <ClosedTaskListManager 

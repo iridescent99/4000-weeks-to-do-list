@@ -59,7 +59,7 @@ const context = await esbuild.context({
 	target: "es2018",
 	logLevel: "info",
 	sourcemap: prod ? false : "inline",
-	loader: {'.css': 'css'},
+	loader: {'.css': 'css', '.scss': 'css'},
 	treeShaking: true,
 	define: {
 		'process.env.NODE_ENV': JSON.stringify('production'), // or 'development'

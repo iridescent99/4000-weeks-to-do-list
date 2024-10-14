@@ -31,8 +31,8 @@ export class FourThousandWeeksSettingsTab extends PluginSettingTab {
 		this.addTextField(settingContainer, settingReference, this.plugin.settings[settingReference]);
         // @ts-ignore
 		const input = containerEl.createEl('input', {placeholder: this.plugin.settings[settingReference]});
-		input.addEventListener('change', () => {
-			this.addTextField(settingContainer, settingReference);
+		input.addEventListener('change', (e: any) => {
+			this.saveSetting(settingReference, e.target.value);
 		})
         if (settingReference.includes("Folder")) {
             input.addEventListener('focus', () => {
@@ -41,6 +41,14 @@ export class FourThousandWeeksSettingsTab extends PluginSettingTab {
             })
         }
 	}
+
+	saveSetting(reference: string, value='') {
+		// TODO: Perform check if path is accurate
+		// @ts-ignore
+		this.plugin.settings[reference] = value;
+		this.plugin.saveSettings()
+;	}
+
 
 	addTextField(containerEl: HTMLElement, reference: string, value='') {
         // Verify input

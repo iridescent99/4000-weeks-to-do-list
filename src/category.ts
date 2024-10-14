@@ -1,6 +1,6 @@
 import {App, TFile} from "obsidian";
 import {Task} from "./Task";
-import WorkflowAssistant from "./main";
+import FourThousandWeeks from "./index";
 import {Registry} from "./registry";
 
 export class Heading {
@@ -24,7 +24,7 @@ export class Heading {
 
 
 export class Category {
-    plugin: WorkflowAssistant;
+    plugin: FourThousandWeeks;
     registry: Registry;
     path: string;
     name: string;
@@ -36,12 +36,11 @@ export class Category {
     tasks: Task[] = [];
     headings: Heading[] = [];
     fileContent: string[] = [];
-    ARCHIVE_FOLDER: string = '_workflow/_archive/tracking/';
     archivePath: string;
     archiveContent: string[] = [];
     archiveFile: TFile;
 
-    constructor(path: string, plugin: WorkflowAssistant, registry: Registry) {
+    constructor(path: string, plugin: FourThousandWeeks, registry: Registry) {
         this.plugin = plugin;
         this.registry = registry;
         this.path = path;
@@ -49,8 +48,8 @@ export class Category {
         this.depth = splitPath.length;
         this.name = splitPath[this.depth - 1].replace(".md", "");
         this.labels = splitPath.slice(2, this.depth - 1);
-        this.basePath = `${this.plugin.dailyNotesManager.TRACKING_FOLDER}/_open to do list/`;
-        this.archivePath = `${this.ARCHIVE_FOLDER}${this.labels.join("_").toLowerCase()}_${this.name.replace(" ", "_").toLowerCase()}.md`;
+        this.basePath = plugin.settings.openToDoListFolder;
+        this.archivePath = plugin.settings.archiveLocation;
         this.file = this.plugin.app.vault.getAbstractFileByPath(this.path) as TFile;
         this.archiveFile = this.plugin.app.vault.getAbstractFileByPath(this.archivePath) as TFile;
     }

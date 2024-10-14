@@ -1,0 +1,81 @@
+.task-view {
+    display:grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 4% 10% 86%;
+    height:100%;
+
+    .task-view-header {
+        width:100%;
+        grid-row:1;
+        grid-column: 1;
+
+        .task-view-title, .toggle-container {
+            display:inline-block;
+        }
+
+        .task-view-title {
+            width:100%;
+            text-align: center;
+
+            h1 {
+                margin:0;
+            }
+
+        }
+
+        .toggle-container {
+            position: absolute;
+            top:0;
+            left:0;
+            padding:3em;
+        }
+    }
+
+    .open-task-list-select {
+        grid-row:2;
+        grid-column: 1;
+
+        .collapsible-header {
+            text-align: left;
+            margin:1em;
+
+            button {
+                background: none;
+                border:none;
+
+                &:hover {
+                    font-style: italic;
+                }
+
+            }
+        }
+    }
+
+    .vis-container {
+        grid-row:3;
+        grid-column:1;
+    }
+}
+
+
+
+.task-view-navigation {
+    display:flex;
+    justify-content: right;
+    position: absolute;
+    margin:3em;
+    top:0;
+    right:0;
+
+    button {
+        margin: 0 1em;
+        padding:.6em;
+        cursor:pointer;
+
+        &:hover {
+            svg {
+                fill:#000;
+            }
+        }
+    }
+}
